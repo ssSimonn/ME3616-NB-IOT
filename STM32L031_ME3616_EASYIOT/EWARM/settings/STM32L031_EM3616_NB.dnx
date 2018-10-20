@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<settings>
+    <Stack>
+        <FillEnabled>0</FillEnabled>
+        <OverflowWarningsEnabled>1</OverflowWarningsEnabled>
+        <WarningThreshold>90</WarningThreshold>
+        <SpWarningsEnabled>1</SpWarningsEnabled>
+        <WarnLogOnly>1</WarnLogOnly>
+        <UseTrigger>1</UseTrigger>
+        <TriggerName>main</TriggerName>
+        <LimitSize>0</LimitSize>
+        <ByteLimit>50</ByteLimit>
+    </Stack>
+    <StLinkDriver>
+        <stlinkserialNo>67055329</stlinkserialNo>
+        <stlinkfoundProbes />
+        <stlinkResetStyle>0</stlinkResetStyle>
+        <stlinkResetStrategy>3</stlinkResetStrategy>
+        <CStepIntDis>_ 0</CStepIntDis>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+    </StLinkDriver>
+    <Exceptions>
+        <StopOnUncaught>_ 0</StopOnUncaught>
+        <StopOnThrow>_ 0</StopOnThrow>
+    </Exceptions>
+    <DebugChecksum>
+        <Checksum>342240181</Checksum>
+    </DebugChecksum>
+    <CallStack>
+        <ShowArgs>0</ShowArgs>
+    </CallStack>
+    <Disassembly>
+        <MixedMode>1</MixedMode>
+    </Disassembly>
+    <struct_types>
+        <Fmt0>Me3616_DeviceType-RxStringBegin	3	0</Fmt0>
+        <Fmt1>Me3616_DeviceType-RxStringEnd	3	0</Fmt1>
+        <Fmt2>Me3616_DeviceType-Sys_State	4	0</Fmt2>
+        <Fmt3>USART_TypeDef-BRR	4	0</Fmt3>
+        <Fmt4>USART_TypeDef-CR1	4	0</Fmt4>
+        <Fmt5>USART_TypeDef-CR2	4	0</Fmt5>
+        <Fmt6>USART_TypeDef-CR3	4	0</Fmt6>
+        <Fmt7>USART_TypeDef-ISR	4	0</Fmt7>
+    </struct_types>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
+    <CallStackLog>
+        <Enabled>0</Enabled>
+    </CallStackLog>
+    <CallStackStripe>
+        <ShowTiming>1</ShowTiming>
+    </CallStackStripe>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
+    <Aliases>
+        <A0>_ "C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal.c" ""</A0>
+        <A1>_ "C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_rcc.c" ""</A1>
+        <A2>_ "C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_uart.c" ""</A2>
+        <A3>_ "C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Src\main.c" ""</A3>
+        <A4>_ "C:\Users\Simon\Desktop\STM32L031_EM3616_NB\Drivers\CMSIS\Include\core_cm0plus.h" ""</A4>
+        <A5>_ "C:\Users\Simon\Desktop\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal.c" ""</A5>
+        <A6>_ "C:\Users\Simon\Desktop\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_cortex.c" ""</A6>
+        <A7>_ "C:\Users\Simon\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal.c" ""</A7>
+        <A8>_ "C:\Users\Simon\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_dma.c" ""</A8>
+        <Count>9</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
+</settings>

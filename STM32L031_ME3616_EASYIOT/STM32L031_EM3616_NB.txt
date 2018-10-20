@@ -1,0 +1,62 @@
+Configuration	STM32L031_EM3616_NB
+STM32CubeMX 	4.27.0
+Date	10/15/2018
+MCU	STM32L031K6Tx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+LPUART1	Asynchronous	LPUART1_RX	PA3
+LPUART1	Asynchronous	LPUART1_TX	PA2
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_IN	PC14-OSC32_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_OUT	PC15-OSC32_OUT
+SYS	Serial_Wire	SYS_SWCLK	PA14
+SYS	Serial_Wire	SYS_SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+USART2	Asynchronous	USART2_RX	PA10
+USART2	Asynchronous	USART2_TX	PA9
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PC14-OSC32_IN	RCC_OSC32_IN	
+3	PC15-OSC32_OUT	RCC_OSC32_OUT	
+8	PA2	LPUART1_TX	STLINK_UART_TX
+9	PA3	LPUART1_RX	STLINK_UART_RX
+14	PB0	GPIO_Output	NB_RST_EN
+19	PA9	USART2_TX	MCU_TXD
+20	PA10	USART2_RX	MCU_RXD
+23	PA13	SYS_SWDIO	TMS
+24	PA14	SYS_SWCLK	TCK
+26	PB3	GPIO_Output	LD3 [Green]
+27	PB4	GPIO_Output	AP_READY_EN
+28	PB5	GPIO_Output	WAKEUP_AP
+29	PB6	GPIO_Output	WAKEUP_NB_EN
+30	PB7	GPIO_Output	POWER_ON_EN
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : STM32L031_EM3616_NB
+Project Folder : C:\Users\Simon\Desktop\STM32L031_ME3616\STM32L031_EM3616_NB
+Toolchain / IDE : MDK-ARM V5
+Firmware Package Name and Version : STM32Cube FW_L0 V1.10.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy all used libraries into the project folder
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : Yes
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+

@@ -1,0 +1,125 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.30.2.160/W32 for ARM         07/Oct/2018  23:19:43
+# Copyright 1999-2018 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\Drivers\ME3616\SRC\typeconv.c
+#    Command line =  
+#        -f C:\Users\Simon\AppData\Local\Temp\EW9D5D.tmp
+#        (C:\Users\Simon\Desktop\STM32L031_EM3616_NB\Drivers\ME3616\SRC\typeconv.c
+#        -D USE_HAL_DRIVER -D STM32L031xx -lcN
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\List
+#        -o
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M0+ -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.1\arm\inc\c\DLib_Config_Full.h"
+#        -I C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM/../Inc\ -I
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM/../Drivers/STM32L0xx_HAL_Driver/Inc\
+#        -I
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM/../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy\
+#        -I
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM/../Drivers/CMSIS/Device/ST/STM32L0xx/Include\
+#        -I
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM/../Drivers/CMSIS/Include\
+#        -I
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM\..\Drivers\ME3616\INC\
+#        -On -I "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.1\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\List\typeconv.lst
+#    Object file  =  
+#        C:\Users\Simon\Desktop\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\Obj\typeconv.o
+#
+###############################################################################
+
+C:\Users\Simon\Desktop\STM32L031_EM3616_NB\Drivers\ME3616\SRC\typeconv.c
+      1          /******************************************************************************
+      2          
+      3          ******************************************************************************/
+      4          #include <ctype.h>
+      5          #include "typeconv.h"
+      6          
+      7          //字节流转换为十六进制字符串的另一种实现方式  
+      8          void Hex2Str( const char *sSrc,  char *sDest, int nSrcLen )  
+      9          {  
+     10              int  i;  
+     11              char szTmp[3];  
+     12            
+     13              for( i = 0; i < nSrcLen; i++ )  
+     14              {
+     15          				sprintf( szTmp, "%02X", (unsigned char) sSrc[i] );  
+     16                  memcpy( &sDest[i * 2], szTmp, 2 );  
+     17              }  
+     18              return ;  
+     19          }
+     20          
+     21          //十六进制字符串转换为字节流  
+     22          bool HexStrToByte(const char* source, unsigned char* dest, int sourceLen)  
+     23          {
+     24              short i;
+     25              unsigned char highByte, lowByte;
+     26          	
+     27          		if((sourceLen % 2) != 0)
+     28          			return false;
+     29          
+     30              for (i = 0; i < sourceLen; i += 2)
+     31              {
+     32                  highByte = toupper(source[i]);
+     33                  lowByte  = toupper(source[i + 1]);
+     34          			
+     35          				if((lowByte < 0x30 && lowByte > 0x46) || (highByte < 0x30 && highByte > 0x46))
+     36          					return false;
+     37          
+     38                  if (highByte > 0x39)
+     39                      highByte -= 0x37;
+     40                  else
+     41                      highByte -= 0x30;
+     42          
+     43                  if (lowByte > 0x39)
+     44                      lowByte -= 0x37;
+     45                  else
+     46                      lowByte -= 0x30;
+     47            
+     48                  dest[i / 2] = (highByte << 4) | lowByte;
+     49              }  
+     50              return true;
+     51          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   Hex2Str
+        40   -> __aeabi_memcpy
+        40   -> sprintf
+      32   HexStrToByte
+        32   -> toupper
+        32 __aeabi_idiv
+        32 __aeabi_idivmod
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       8  ?_0
+      54  Hex2Str
+     158  HexStrToByte
+
+ 
+   8 bytes in section .rodata
+ 216 bytes in section .text
+ 
+ 216 bytes of CODE  memory
+   8 bytes of CONST memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,449 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.30.1.114/W32 for ARM         28/Sep/2018  20:00:24
+# Copyright 1999-2018 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\ME3616\SRC\AT_Command_Parser.c
+#    Command line =  
+#        -f C:\Users\ADMINI~1\AppData\Local\Temp\EW4508.tmp
+#        (C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\ME3616\SRC\AT_Command_Parser.c
+#        -D USE_HAL_DRIVER -D STM32L031xx -lcN
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\List
+#        -o
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M0+ -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.1\arm\inc\c\DLib_Config_Full.h"
+#        -I
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM/../Inc\
+#        -I
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM/../Drivers/STM32L0xx_HAL_Driver/Inc\
+#        -I
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM/../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy\
+#        -I
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM/../Drivers/CMSIS/Device/ST/STM32L0xx/Include\
+#        -I
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM/../Drivers/CMSIS/Include\
+#        -I
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM\..\Drivers\ME3616\INC\
+#        -On -I "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.1\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\List\AT_Command_Parser.lst
+#    Object file  =  
+#        C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\EWARM\STM32L031_EM3616_NB\Obj\AT_Command_Parser.o
+#
+###############################################################################
+
+C:\Users\Administrator\Desktop\STM32L031_EM3616_NB\STM32L031_EM3616_NB\Drivers\ME3616\SRC\AT_Command_Parser.c
+      1          /******************************************************************************
+      2          
+      3          ******************************************************************************/
+      4          #include "me3616.h"
+      5          
+      6          extern Me3616_t me3616;
+      7          
+      8          bool clisend_flag = false;
+      9          bool observe_flag = false;
+     10          
+     11          /**************************************************************************
+     12          *
+     13          *************************************************************************/
+     14          typedef void(*WaitEventHandler)(char *pch,AT_Type_t at_type);
+     15          
+     16          void WatiATHandler(char *pch,AT_Type_t at_type);                       //AT_CMD_AT
+     17          void WatiATIHandler(char *pch,AT_Type_t at_type);                       //AT_CMD_ATI
+     18          void WaitATEHandler(char *pch,AT_Type_t at_type);                      //AT_CMD_ATE0
+     19          void WaitCFUNHandler(char *pch,AT_Type_t at_type);                     //AT_CMD_CFUN,
+     20          void WaitCEREGHandler(char *pch,AT_Type_t at_type);                     //AT_CMD_CREG,
+     21          void WaitCPINHandler(char *pch,AT_Type_t at_type);                     //AT_CMD_CPIN,
+     22          void WaitCSQHandler(char *pch,AT_Type_t at_type);                      //AT_CMD_CSQ,
+     23          void WaitM2mclisendHandler(char *pch,AT_Type_t at_type);							 //AT_CMD_SNED,
+     24          void WaitPowerOnHandler(char *pch, AT_Type_t at_type);
+     25          void WaitM2mclinew(char *pch, AT_Type_t at_type);
+     26          void WaitGsnHandler(char *pch, AT_Type_t at_type);
+     27          void WaitCclk(char *pch, AT_Type_t at_type);
+     28          void WaitZrst(char *pch, AT_Type_t at_type);
+     29          void WaitZturnoff(char *pch, AT_Type_t at_type);
+     30          
+     31          void LWM2M_Active_report(char *pch);
+     32          
+     33          const WaitEventHandler ATWaitEventHandler[] =
+     34          {
+     35              NULL, 
+     36          	WaitPowerOnHandler,
+     37              WatiATHandler,
+     38          	WatiATIHandler,
+     39              WaitATEHandler,
+     40              WaitCFUNHandler,
+     41              WaitCEREGHandler,
+     42              WaitCPINHandler,
+     43              WaitCSQHandler,
+     44          	WaitM2mclisendHandler,
+     45          	WaitM2mclinew,
+     46          	WaitGsnHandler,
+     47          	WaitCclk,
+     48          	WaitZrst,
+     49          	WaitZturnoff,
+     50          };
+     51          
+     52          
+     53          bool ATAnswerCheck(AT_Command_t cmd,AT_Type_t at_type,char * pch)
+     54          {
+     55            if (ATWaitEventHandler[cmd] == NULL)
+     56              return false;
+     57            if (!strncmp(pch, "AT+", 3))
+     58            {
+     59              return true;
+     60            }
+     61            ATWaitEventHandler[cmd](pch,at_type);
+     62          	
+     63          	return true;
+     64          }
+     65          
+     66          void ATHandle(uint8_t *p_ATBuff,uint16_t len)
+     67          {
+     68            ATAnswerCheck(me3616.ATInfo.ATCommand,me3616.ATInfo.ATType,(char *)p_ATBuff);
+     69          	//处理主动上报数据
+     70          	LWM2M_Active_report((char *)p_ATBuff);
+     71          }
+     72          //主动上报消息
+     73          void LWM2M_Active_report(char *pch)
+     74          {
+     75          	if(!strncmp(pch, "+M2MCLI:", 8))
+     76          	{
+     77          		if(!strncmp(pch+8, "register success", 16))
+     78          		{
+     79          			//模块注册电信 IOT 平台成功
+     80          		}
+     81          		else if(!strncmp(pch+8, "register failed", 15))
+     82          		{
+     83          			//模块注册电信 IOT 平台失败
+     84          		}
+     85          		else if(!strncmp(pch+8, "notify success", 14))
+     86          		{
+     87          			//模块使用 AT+M2MCLISEND 向 IOT 平台成功发送数据
+     88          			clisend_flag = false;
+     89          		}
+     90          		else if(!strncmp(pch+8, "observe success", 15))
+     91          		{
+     92          			observe_flag = true;
+     93          			//模块收到电信 IOT 平台 observe object
+     94          		}
+     95          		else if(!strncmp(pch+8, "register update success", 23))
+     96          		{
+     97          			//模块更新注册电信 IOT 平台成功
+     98          			printf("register update success");
+     99          		}
+    100          		else if(!strncmp(pch+8, "deregister success", 18))
+    101          		{
+    102          			//模块去注册电信 IOT 平台成功
+    103          		}
+    104          	} else if(!strncmp(pch, "+M2MCLIRECV:", 12))//平台向模块下发命令
+    105          	{
+    106          	}
+    107          }
+    108          /**************************************************************************
+    109          *                        POWER_ON
+    110          *************************************************************************/
+    111          void WaitPowerOnHandler(char *pch, AT_Type_t at_type)
+    112          {
+    113          	if(!strncmp(pch, "*MATREADY: 1",12))
+    114          	{
+    115          		me3616.RxStringIncoming = true;
+    116          	} else if(!strncmp(pch, "+CFUN: 1", 8))
+    117          	{
+    118          		me3616.RxStringIncoming = true;
+    119          	} else if(!strncmp(pch, "+CPIN: READY", 12))
+    120          	{
+    121          		me3616.RxStringIncoming = true;
+    122          	} else if(!strncmp(pch, "+IP:", 4))
+    123          	{
+    124          		sscanf(pch + 5,"%s", me3616.Ip);
+    125          		MESetAtState(AT_STATE_OK);
+    126          	}
+    127          }
+    128          
+    129          /**************************************************************************
+    130          *                        AT_CMD_AT
+    131          *************************************************************************/
+    132          void WatiATHandler(char *pch,AT_Type_t at_type)
+    133          {
+    134            if(!strncmp(pch,"OK",2))
+    135              MESetAtState(AT_STATE_OK);
+    136            else if(!strncmp(pch,"+CME",4))
+    137              MESetAtState(AT_STATE_ERR);
+    138          }
+    139          /**************************************************************************
+    140          *                        AT_CMD_ATI
+    141          *************************************************************************/
+    142          void WatiATIHandler(char *pch,AT_Type_t at_type)
+    143          {
+    144            if(!strncmp(pch,"OK",2))
+    145              MESetAtState(AT_STATE_OK);
+    146          	else if (!strncmp(pch,"Manufacture:",12))
+    147          		me3616.RxStringIncoming = true;
+    148          	else if (!strncmp(pch, "Model:", 6))
+    149          		me3616.RxStringIncoming = true;
+    150          	else if (!strncmp(pch, "SwRevision:",11))
+    151          	{
+    152          		me3616.RxStringIncoming = true;
+    153          		printf("%s\n", pch);
+    154          	}
+    155          	else if (!strncmp(pch, "HwRevision:", 11))
+    156          		me3616.RxStringIncoming = true;
+    157            else if(!strncmp(pch,"+CME",4))
+    158              MESetAtState(AT_STATE_ERR);
+    159          //	else
+    160          //		me3616.RxStringIncoming = true;
+    161          }
+    162          /**************************************************************************
+    163          *                        AT_CMD_ATE0
+    164          *************************************************************************/
+    165          void WaitATEHandler(char *pch,AT_Type_t at_type)                      
+    166          {
+    167            if(!strncmp(pch,"OK",2))
+    168              MESetAtState(AT_STATE_OK);
+    169            else if(!strncmp(pch,"+CME",4))
+    170              MESetAtState(AT_STATE_ERR);
+    171          }
+    172          /**************************************************************************
+    173          *                        //AT_CMD_CFUN,
+    174          *************************************************************************/
+    175          void WaitCFUNHandler(char *pch,AT_Type_t at_type)                     
+    176          {
+    177            static uint8_t cnt = 0;
+    178            if(at_type == AT_QUERY)
+    179            {
+    180              if(!strncmp(pch,"+CFUN:",6))
+    181          		{
+    182                cnt = 1;
+    183          			printf("%s\n", pch);
+    184          		}
+    185              else if(!strncmp(pch,"OK",2) && (cnt == 1))
+    186              {
+    187                MESetAtState(AT_STATE_OK);
+    188                cnt = 0;
+    189              }
+    190              else if(!strncmp(pch,"+CME ERROR:",11))
+    191                MESetAtState(AT_STATE_ERR);
+    192            }
+    193            else if(at_type == AT_SET)
+    194            {
+    195              if(!strncmp(pch,"OK",2))
+    196                MESetAtState(AT_STATE_OK);
+    197              else if(!strncmp(pch,"+CME ERROR:",11))
+    198                MESetAtState(AT_STATE_ERR);
+    199            }
+    200          }
+    201          /**************************************************************************
+    202          *                        //AT_CMD_CEREG,
+    203          *************************************************************************/
+    204          void WaitCEREGHandler(char *pch,AT_Type_t at_type)                     
+    205          {
+    206            static uint8_t cnt = 0;
+    207            static bool log_on = false;
+    208            if(at_type == AT_QUERY)
+    209            {
+    210              if(!strncmp(pch,"+CEREG:",7))
+    211              {
+    212                cnt = 1;
+    213                if(*(pch + 10) == '1' || *(pch + 10) == '5')
+    214                  log_on = true;
+    215                else 
+    216                  log_on = false;
+    217              }
+    218              else if(!strncmp(pch,"OK",2) && (cnt == 1))
+    219              {
+    220                cnt = 0;
+    221                if(log_on)
+    222                  MESetAtState(AT_STATE_OK);
+    223                else
+    224                  MESetAtState(AT_STATE_ERR);
+    225              } 
+    226              else if(!strncmp(pch,"+CME ERROR:",11))
+    227                MESetAtState(AT_STATE_ERR);
+    228            }
+    229            else if(at_type == AT_SET)
+    230            {
+    231              if(!strncmp(pch,"OK",2))
+    232                MESetAtState(AT_STATE_OK);
+    233              else if(!strncmp(pch,"+CME ERROR:",11))
+    234                MESetAtState(AT_STATE_ERR);
+    235            }
+    236          }
+    237          /**************************************************************************
+    238          *                        //AT_CMD_CPIN,
+    239          *************************************************************************/
+    240          void WaitCPINHandler(char *pch,AT_Type_t at_type)                     
+    241          {
+    242            
+    243            static uint8_t code = 0;
+    244            /*
+    245            <code> 
+    246            1:READY 需要输入任何密码
+    247            2:SIM PIN 需要输入PIN码
+    248            3:SIM PUK PIN码解锁密码
+    249            4:PH-SIM PIN SIM卡绑定密码
+    250            5:SIM PIN2 PIN2码密码
+    251            6:SIM PUK2 PIN2码解锁密码
+    252            7:PH-NET PIN 网络密码
+    253            */
+    254            static uint8_t cnt = 0;
+    255            if(at_type == AT_QUERY)
+    256            {
+    257              if(!strncmp(pch,"+CPIN:",6))
+    258              {
+    259                cnt = 1;
+    260                if(!strncmp(pch+7,"READY",5))
+    261                  code = 1;
+    262                else if(!strncmp(pch+7,"SIM PIN",7))
+    263                  code =2;
+    264                else if(!strncmp(pch+7,"SIM PUK PIN",11))
+    265                  code =3;
+    266                else if(!strncmp(pch+7,"PH-SIM PIN SIM",14))
+    267                  code =4;
+    268                else if(!strncmp(pch+7,"SIM PIN2 PIN2",13))
+    269                  code =5;
+    270                else if(!strncmp(pch+7,"SIM PUK2 PIN2",13))
+    271                  code =6;
+    272                else if(!strncmp(pch+7,"PH-NET PIN",10))
+    273                  code =7;
+    274              }
+    275              else if((cnt == 1) && !strncmp(pch,"OK",2))
+    276              {
+    277                cnt = 0;
+    278                if(code == 1)
+    279                  MESetAtState(AT_STATE_OK);
+    280                else
+    281                  MESetAtState(AT_STATE_ERR);
+    282              }
+    283              else if(!strncmp(pch,"+CME ERROR:",11))
+    284                MESetAtState(AT_STATE_ERR);
+    285            }
+    286            else if(at_type == AT_SET)
+    287            {
+    288              if(!strncmp(pch,"OK",2))
+    289                MESetAtState(AT_STATE_OK);
+    290              else if(!strncmp(pch,"+CME ERROR:",11))
+    291                MESetAtState(AT_STATE_ERR);
+    292            }
+    293          }
+    294          /**************************************************************************
+    295          *                        //AT_CMD_CSQ,
+    296          *************************************************************************/
+    297          void WaitCSQHandler(char *pch,AT_Type_t at_type)                      
+    298          {
+    299            static uint8_t cnt = 0;
+    300            if(!strncmp(pch,"+CSQ:",5))
+    301            {
+    302          		sscanf(pch + 6,"%u,%u",&me3616.Rssi,&me3616.Ber);
+    303              cnt = 1;
+    304            }
+    305            else if (!strncmp(pch, "OK", 2) && (cnt == 1))
+    306            {
+    307              cnt = 0;
+    308              MESetAtState(AT_STATE_OK);
+    309            } 
+    310            else if(!strncmp(pch,"+CME ERROR:",11))
+    311              MESetAtState(AT_STATE_ERR);
+    312          }
+    313          
+    314          /**************************************************************************
+    315          *                        //AT_CMD_M2MCLISEND,
+    316          *************************************************************************/
+    317          void WaitM2mclisendHandler(char *pch,AT_Type_t at_type)
+    318          {
+    319          	if(!strncmp(pch, "OK", 2))
+    320          	{
+    321          		MESetAtState(AT_STATE_OK);
+    322          	} else
+    323          	{
+    324          		MESetAtState(AT_STATE_ERR);
+    325          	}
+    326          }
+    327          /**************************************************************************
+    328          *                        //AT_CMD_M2MCLINEW,
+    329          *************************************************************************/
+    330          void WaitM2mclinew(char *pch, AT_Type_t at_type)
+    331          {
+    332          	if(!strncmp(pch, "OK", 2))
+    333          	{
+    334          		MESetAtState(AT_STATE_OK);
+    335          	} else
+    336          	{
+    337          		MESetAtState(AT_STATE_ERR);
+    338          	}
+    339          }
+    340          /**************************************************************************
+    341          *                        //AT_CMD_GSN,
+    342          *************************************************************************/
+    343          void WaitGsnHandler(char *pch, AT_Type_t at_type)
+    344          {
+    345          	static uint8_t cnt = 0;
+    346          	if(cnt == 0)
+    347          	{
+    348          		printf("%s\n", pch);
+    349          		sscanf(pch, "%llu", &me3616.imei);
+    350          		cnt = 1;
+    351          	} else if(!strncmp(pch, "OK", 2) && (cnt == 1))
+    352          	{
+    353          		MESetAtState(AT_STATE_OK);
+    354          	} else if(!strncmp(pch,"+CME ERROR:",11))
+    355          	{
+    356          		MESetAtState(AT_STATE_ERR);
+    357          		cnt = 0;
+    358          	}
+    359          }
+    360          
+    361          void WaitCclk(char *pch, AT_Type_t at_type)
+    362          {
+    363          	uint32_t year;
+    364          	uint8_t month, day, hour, minute, second, zone;
+    365          	static uint8_t cnt = 0;
+    366          	if(!strncmp(pch,"+CCLK:",6))
+    367          	{
+    368          		sscanf(pch+6, "%u/%hhu/%hhu,%hhu:%hhu:%hhuGMT+%hhu", &year, &month, &day, &hour, &minute, &second, &zone);
+    369          		cnt = 1;
+    370          		MESetAtState(AT_STATE_OK);
+    371          	} else if(!strncmp(pch, "OK", 2) && (cnt == 1))
+    372          	{
+    373          		cnt = 0;
+    374          		MESetAtState(AT_STATE_OK);
+    375          	} else if(!strncmp(pch,"+CME ERROR:",11))
+    376          	{
+    377          		MESetAtState(AT_STATE_ERR);
+    378          		cnt = 0;
+    379          	}	
+    380          }
+    381          
+    382          void WaitZrst(char *pch, AT_Type_t at_type)
+    383          {
+    384          	if(!strncmp(pch, "OK", 2))
+    385          	{
+    386          		MESetAtState(AT_STATE_OK);
+    387          	} else
+    388          	{
+    389          		MESetAtState(AT_STATE_ERR);
+    390          	}
+    391          }
+    392          
+    393          void WaitZturnoff(char *pch, AT_Type_t at_type)
+    394          {
+    395          	if(!strncmp(pch, "OK", 2))
+    396          	{
+    397          		MESetAtState(AT_STATE_OK);
+    398          	} else
+    399          	{
+    400          		MESetAtState(AT_STATE_ERR);
+    401          	}
+    402          }
+
+Errors: 1
+Warnings: none
