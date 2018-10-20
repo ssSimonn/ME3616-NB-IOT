@@ -1,0 +1,5 @@
+This is a Demo for ME3616 NB-IoT Module, made by emakerzone, Base on ST HAL drivers.
+
+This Demo collected all ME3616 command set from manual, shows how MCU send AT command to ME3616, and handle commands from China Telcom IoT platform.
+
+Any question or suggestion, send me an e-mail via SimonLuk@unidevelop.net 
