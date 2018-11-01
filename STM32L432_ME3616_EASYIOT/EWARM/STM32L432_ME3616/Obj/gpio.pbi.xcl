@@ -1,49 +1,49 @@
-"C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Core\Src\gpio.c"
+"C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Core\Src\gpio.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Core\Src
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Core\Src
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM/../Core/Inc
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM/../Core/Inc
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/STM32L4xx_HAL_Driver/Inc
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/STM32L4xx_HAL_Driver/Inc
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/CMSIS/Device/ST/STM32L4xx/Include
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/CMSIS/Device/ST/STM32L4xx/Include
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/CMSIS/Include
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM/../Drivers/CMSIS/Include
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM\..\Drivers\ME3616\INC
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM\..\Drivers\ME3616\INC
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM\..\Drivers\EASYIOT\inc
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM\..\Drivers\EASYIOT\inc
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\Core\Include
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CMSIS\Core\Include
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CMSIS\DSP\Include
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\inc
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\inc
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\inc\c
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\inc\c
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Core\Inc
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Core\Inc
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Drivers\STM32L4xx_HAL_Driver\Inc
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Drivers\STM32L4xx_HAL_Driver\Inc
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Drivers\STM32L4xx_HAL_Driver\Inc\Legacy
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Drivers\STM32L4xx_HAL_Driver\Inc\Legacy
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Drivers\CMSIS\Device\ST\STM32L4xx\Include
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Drivers\CMSIS\Device\ST\STM32L4xx\Include
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Drivers\CMSIS\Include
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Drivers\CMSIS\Include
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Drivers\ME3616\INC
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Drivers\ME3616\INC
 -I
-C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\Drivers\EASYIOT\inc
+C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\Drivers\EASYIOT\inc
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\Core\Include
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CMSIS\Core\Include
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CMSIS\DSP\Include
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -194,8 +194,8 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include
 -D__JMP_BUF_ELEMENT_TYPE__=unsigned long long int
 -D__JMP_BUF_NUM_ELEMENTS__=16
 -D__TID__=0xcf60
--D__VER__=8030002
--D__BUILD_NUMBER__=160
+-D__VER__=8032001
+-D__BUILD_NUMBER__=169
 -D__IAR_SYSTEMS_ICC__=9
 -D_MAX_ALIGNMENT=8
 -D__LITTLE_ENDIAN__=1
@@ -289,8 +289,8 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include
 -D__HAS_JOINED_TYPES__=1
 -D__HAS_LOCATED_DECLARATION__=1
 -D__HAS_LOCATED_WITH_INIT__=1
--D__IAR_COMPILERBASE__=656389
--D__IAR_COMPILERBASE_STR__=10.4.5.1105
+-D__IAR_COMPILERBASE__=656390
+-D__IAR_COMPILERBASE_STR__=10.4.6.1115
 -D__UNICODE_SOURCE_SUPPORTED__=1
 -D__VTABLE_MEM__=
 -D__PRAGMA_REDEFINE_EXTNAME=1
@@ -337,9 +337,9 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CMSIS\DSP\Include
 -D__EDG_FLOAT128_ENABLING_POSSIBLE=0
 -DUSE_HAL_DRIVER=1
 -DSTM32L432xx=1
--D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.1\\arm\\inc\\c\\DLib_Config_Full.h"
--D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.1\\arm\\inc\\c\\DLib_Config_Full.h"
--D__VERSION__="IAR ANSI C/C++ Compiler V8.30.2.160/W32 for ARM"
+-D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.2\\arm\\inc\\c\\DLib_Config_Full.h"
+-D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.2\\arm\\inc\\c\\DLib_Config_Full.h"
+-D__VERSION__="IAR ANSI C/C++ Compiler V8.32.1.169/W32 for ARM"
 -D__ICCARM_OLD_DEFINED_VAARGS__=1
 -D__VA_STACK_ALIGN__=8
 -D__CODE_MEMORY_LIST1__()=__CODE_MEM_HELPER1__(__code, 0 )

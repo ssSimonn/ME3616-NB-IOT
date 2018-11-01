@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.general.xcl" --backend -f "C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\common\bin\cspybat" -f "C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.general.xcl" --backend -f "C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\Simon\Desktop\STM32L432_ME3616\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\common\bin\cspybat" -f "C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.general.xcl" "--debug_file=%~1" --backend -f "C:\LocalGitHub\ME3616-NB-IOT\STM32L432_ME3616_EASYIOT\EWARM\settings\STM32L432_ME3616.STM32L432_ME3616.driver.xcl" 
 
 @echo off 
 :end

@@ -41,15 +41,14 @@
 #include "easyiot.h"
 #include "TestDevice.h"
 
-#define EASYIOT_MSG_BUFF_MAX_SIZE			400
-#define EASYIOT_MSG_BUFF_ACK_MAX_SIZE		400
-#define EASYIOT_CMD_BUFF_MAX_SIZE			400
-#define EASYIOT_CMD_BUFF_ACK_MAX_SIZE		400
-#define EASYIOT_CONVERT_AT_BUFF_MAX_SIZE	400
+#define EASYIOT_MSG_BUFF_MAX_SIZE			200
+#define EASYIOT_RECEIVE_MAX_SIZE			250
+#define EASYIOT_CMD_BUFF_ACK_MAX_SIZE		200
+#define EASYIOT_CONVERT_AT_BUFF_MAX_SIZE	200
 
 
-char * client_imei = "86966203070xxxx";
-char * client_imsi = "46011300950xxxx";
+char * client_imei = "869662030705583";
+char * client_imsi = "460113009503228";
 
 
 int32_t Signal_val = 0;		//信号强度
@@ -57,10 +56,9 @@ uint8_t Battery_val = 0;	//电量
 uint16_t last_dtag_mid = 0;	//需要回复的上一条消息/命令的dtag
 
 
-uint8_t msg_buff[EASYIOT_MSG_BUFF_MAX_SIZE] = {0};				//消息buff
-//uint8_t msg_buff_ack[EASYIOT_MSG_BUFF_ACK_MAX_SIZE] = {0};		//消息buff ack
-uint8_t cmd_buff[EASYIOT_CMD_BUFF_MAX_SIZE] = {0};				//命令buff
-uint8_t cmd_ack_buff[EASYIOT_CMD_BUFF_ACK_MAX_SIZE] = {0};		//命令buff ack
+uint8_t msg_buff[EASYIOT_MSG_BUFF_MAX_SIZE] = {0};				//发送消息buff
+uint8_t receive_buff[EASYIOT_RECEIVE_MAX_SIZE] = {0x5a};		//接收buff
+uint8_t cmd_ack_buff[EASYIOT_CMD_BUFF_ACK_MAX_SIZE] = {0};		//命令ack buff ack
 uint8_t convert_buff[EASYIOT_CONVERT_AT_BUFF_MAX_SIZE] = {0};
 
 
@@ -68,7 +66,7 @@ void ME3616_APP_ErrorHandler(char *file, int line, char * pch)
 {
     UNUSED(file);
 	UNUSED(line);
-	DBG_Print((uint8_t *)pch, DBG_DIR_APP);
+	DBG_Print(pch, DBG_DIR_APP);
 	Set_Sys_State(&ME3616_Instance, SYS_STATE_ERR);
 	//Halt and do nothing for this Demo.	
 	while(1);
@@ -76,12 +74,12 @@ void ME3616_APP_ErrorHandler(char *file, int line, char * pch)
 
 void Command_Response(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
-	DBG_Print((uint8_t *)pch, DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 
 	char tmp_string[5] = {0};
 	
 	//以下代码演示如何获得上一条AT指令的回复
-	//ME3616默认打开了命令回显，这里第一次会收到发回的命令，判断若AT开头则忽略。
+	//ME3616默认打开了命令回显，这里第一次会收到发回的命令，判断若AT开头则忽略该字符串。
 	//请勿在此使用阻塞、延时函数。
 	if((Get_Last_AT_CMD(Me3616) == AT_CMD_MODULE_CIMI) &&
 		(strstr(pch, "AT") == NULL))
@@ -128,9 +126,10 @@ void Command_Response(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 void M2MCLIRECV_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("M2MCLIRECV Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 
-	CoapHexInputStatic(pch + 12, cmd_buff, EASYIOT_CMD_BUFF_MAX_SIZE);
+    //接收到的字符串，传给easy iot SDK
+	CoapHexInputStatic(pch + 12, receive_buff, EASYIOT_RECEIVE_MAX_SIZE - 1);
 }
 
 
@@ -138,6 +137,8 @@ void M2MCLIRECV_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 //查询、测试模块信息
 void me3616_test_information(Me3616_DeviceType * Me3616)
 {
+    
+    Set_AT_Info(Me3616, AT_CMD_IGNORE, AT_ACTION_IGNORE, AT_STATE_NONE);
 	//测试AT应答	
 	ME3616_Send_AT_Command(Me3616, AT_CMD_NONE, AT_BASE, true, NULL);
 	HAL_Delay(1000);
@@ -200,7 +201,7 @@ void me3616_test_information(Me3616_DeviceType * Me3616)
 }
 
 
-//测试LWM2M的连接。本测试使用演示IMEI号，因此无需事先在平台注册
+//测试LWM2M的连接。本测试使用演示IMEI号，无需事先在平台注册账号
 void me3616_test_lwm(Me3616_DeviceType * Me3616)
 {
 	//若已经完成电信easy-iot注册，请按照要求修改
@@ -220,6 +221,8 @@ void me3616_test_lwm(Me3616_DeviceType * Me3616)
 	
 	sprintf(command_string, "%s,\"%s\",%s", server_IP_Port, imei, client_Lifetime);
 
+    
+    Set_AT_Info(Me3616, AT_CMD_IGNORE, AT_ACTION_IGNORE, AT_STATE_NONE);
 	//测试AT应答	
 	ME3616_Send_AT_Command(Me3616, AT_CMD_NONE, AT_BASE, true, NULL);
 	HAL_Delay(1000);
@@ -254,38 +257,50 @@ void me3616_test_lwm(Me3616_DeviceType * Me3616)
 
 
 
-/*
+/************************************************************************************
 
 以下为 easy iot 平台及sdk相关代码的使用演示
 
-*/
+*************************************************************************************/
 
+
+//以下三个函数，是电信终端协议中固定需要提供的数据。
+
+//获得电量的callback函数
 uint8_t getBattery(void)
 {
 	return Battery_val;
 }
 
+//获得时间戳的callback函数
 uint64_t getTimestamp(void)
 {
 	return (uint64_t)HAL_GetTick();
 }
 
+//获得信号强度的callback函数
 int32_t getSignal(void)
 {
 	return Signal_val;
 }
 
 
+
+//对于消息，模块发回平台的ack函数
+//目前仅打印log，目前并不影响平台状态，可根据需要选择实现
 void ack_handler(struct Messages* req)
 {
 	DBG_Print ("msg_ack received.", DBG_DIR_APP);
 }
 
+//easy iot SDK生成的内容，发送至模块
 void SendtoModule(const uint8_t* data, uint16_t inLength)
 {
 	//数据转换为字符串
 	Hex2Str((char *)convert_buff, (char *)data, inLength);
 	convert_buff[inLength * 2 ] = '\0';
+    
+    //数据补齐至偶数个数
     if((inLength / 2) == 1)
     {
         inLength++;
@@ -297,14 +312,14 @@ void SendtoModule(const uint8_t* data, uint16_t inLength)
 		ME3616_APP_ErrorHandler(__FILE__, __LINE__, "easy-iot LWM2M send failed.");
 }
 
-
-void SendtoDBG(const uint8_t* data, uint16_t inLength)
+//easy iot SDK生成的debug，发送至模块
+void SendtoDBG(const unsigned char * data, uint16_t inLength)
 {
-	DBG_Print((uint8_t *)data, DBG_DIR_APP);	
+	DBG_Print((char *)data, DBG_DIR_APP);	
 }
 
 
-
+//平台发送至模块的命令callback函数
 void cmd_handler_callback(struct Messages* req)
 {
 	int8_t ret = 0;
@@ -327,7 +342,7 @@ void cmd_handler_callback(struct Messages* req)
         }
 	}
 	last_dtag_mid = req->dtag_mid;
-	Set_Sys_State (&ME3616_Instance, SYS_STATE_LWM_NEED_CMD_ACK);	
+	Set_Sys_State(&ME3616_Instance, SYS_STATE_LWM_NEED_CMD_ACK);	
 }
 
 
@@ -335,37 +350,44 @@ void cmd_handler_callback(struct Messages* req)
 void me3616_test_easyiot(Me3616_DeviceType * Me3616)
 {
     char command_string[50] = {0};
-    //生存时间	
+    
+    //生存时间（PSM时间）	
+    //时间越少，接收间隔越短，功耗越大，流量收费越高，请注意选择
 	char * client_Lifetime = "90";
 
     //电信服务器地址,端口
 	char * server_IP_Port = "117.60.157.137,5683";
     sprintf(command_string, "%s,\"%s\",%s", server_IP_Port, client_imei, client_Lifetime);
 
+       
 	//测试AT应答	
+     Set_AT_Info(Me3616, AT_CMD_IGNORE, AT_ACTION_IGNORE, AT_STATE_NONE);
 	ME3616_Send_AT_Command(Me3616, AT_CMD_NONE, AT_BASE, true, NULL);
 	HAL_Delay(1000);
+    
+    
 
+    /*    准备模块的数据    */
 	// 查询网络信号强度
 	// AT+CESQ
-	if (ME3616_Send_AT_Command(Me3616, AT_CMD_NETWORK_CESQ, AT_BASE, false, NULL) == false) 
-		ME3616_APP_ErrorHandler(__FILE__, __LINE__, "APP Command fault, Halt.");
-
+	ME3616_Send_AT_Command(Me3616, AT_CMD_NETWORK_CESQ, AT_BASE, false, NULL);
 	if(Signal_val > -48 ) DBG_Print ("No Signal or Out of range.", DBG_DIR_AT);
 	
 	// 查询ADC电压值
     // AT+ZADC?
-    if (ME3616_Send_AT_Command(Me3616, AT_CMD_HARDWARE_ZADC, AT_READ, false, NULL) == false) 
-	    ME3616_APP_ErrorHandler(__FILE__, __LINE__, "APP Command fault, Halt.");
+    ME3616_Send_AT_Command(Me3616, AT_CMD_HARDWARE_ZADC, AT_READ, false, NULL);
 
+    
+    
 	HAL_Delay(3000);
 
-
+    
+    
+    /*  使模块连接上easy iot 平台 */
+    ME3616_Send_AT_Command(Me3616, AT_CMD_LWM_M2MCLINEW, AT_SET, false, command_string);
+        
 	for(uint8_t i = 0; i < 10; i++)
 	{
-		if(ME3616_Send_AT_Command(Me3616, AT_CMD_LWM_M2MCLINEW, AT_SET, false, command_string) == false) 
-			ME3616_APP_ErrorHandler(__FILE__, __LINE__, "APP Command fault, Halt.");
-        
         HAL_Delay(5000);
 		if(Get_Sys_State(Me3616, SYS_STATE_LWM_REGISTER_SUCCESS) == true &&
 		   Get_Sys_State(Me3616, SYS_STATE_LWM_OBSERVE_SUCCESS) == true)
@@ -374,13 +396,16 @@ void me3616_test_easyiot(Me3616_DeviceType * Me3616)
 		if(i >= 5 ) ME3616_APP_ErrorHandler(__FILE__, __LINE__, "LWM2M register/observe failed.");
 	}
 	
+    
 
 	HAL_Delay(3000);
 
 
-	
+    
+	/*   初始化easy iot SDK   */
 	EasyIotInit(client_imei, client_imsi);
 
+    //设置callback函数
 	setsTimestampCb(getTimestamp);
 	setSignalCb(getSignal);
 	setBatteryCb(getBattery);
@@ -388,25 +413,38 @@ void me3616_test_easyiot(Me3616_DeviceType * Me3616)
 	setLogSerialOutputCb(SendtoDBG);
 	setNbSerialOutputCb(SendtoModule);
 
-	//处理命令的callback
+	//设置处理命令的callback
 	setCmdHandler(CMD_1_CMDID, cmd_handler_callback);
-	//处理消息ack的callback
+	//设置处理消息ack的callback
 	setAckHandler(ack_handler);
     
     
+    
+    /*  发送一个消息到easy iot平台  */
 	struct Messages * msg = NewMessageStatic(msg_buff, EASYIOT_MSG_BUFF_MAX_SIZE);
-
 	setMessages(msg, CMT_USER_UP, MSG_1_MSGID);
+
+    //设置消息的序号
 	msg->dtag_mid = last_dtag_mid++;
-	AddInt8(msg, SENSOR_1_TLV_PARAMID, 50);
-	AddInt32 (msg, SENSOR_2_TLV_PARAMID, 666);
+    
+    //把传感器的内容加入至消息中
+	AddInt8(msg, SENSOR_1_TLV_PARAMID, 60);
+	AddInt32 (msg, SENSOR_2_TLV_PARAMID, 888);
 	AddInt8 (msg, LED_GREEN_TLV_PARAMID, 0);
+    
+    //发送消息
 	pushMessages(msg);
 
+    //释放
 	FreeMessage(msg);
 
-	HAL_Delay(2000);
+        
+    
+	HAL_Delay(3000);
 	
+    
+    
+    /*   等待接收从平台下发的命令  */
 	while(1)
 	{
 		if(Get_Sys_State(Me3616, SYS_STATE_LWM_NEED_CMD_ACK) == true)
@@ -429,7 +467,7 @@ void me3616_test_easyiot(Me3616_DeviceType * Me3616)
 
 			Clear_Sys_State(Me3616, SYS_STATE_LWM_NEED_CMD_ACK);
 		}
-		HAL_Delay(10000);
+		HAL_Delay(3000);
 	}
 }
 
@@ -438,10 +476,13 @@ void ME3616_APP(Me3616_DeviceType * Me3616)
 {
 	HAL_Delay(1000);
 
+    /*查询模块信息*/
 //	me3616_test_information(Me3616);
     
+    /*测试模块与平台的连通性*/
 //	me3616_test_lwm(Me3616);
 
+    /*测试消息-指令的收发*/
 	me3616_test_easyiot(Me3616);
 
 }

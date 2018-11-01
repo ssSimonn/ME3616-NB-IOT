@@ -186,9 +186,9 @@ void setMessages(struct Messages* msg, enum CoapMessageType type, uint8_t msgid)
 
 
 // 静态初始化 Message 结构体，使用此函数构造的 Message 在随后的 addtlv中，亦不会动态分配内存
-struct Messages* NewMessageStatic(uint8_t* buf, uint16_t inMaxLength)
+struct Messages* NewMessageStatic(uint8_t * buf, uint16_t inMaxLength)
 {
-	struct Messages* msg;
+	__attribute__((aligned(4))) struct Messages * msg;
 
 	if (!buf) {
 		Logging(LOG_WARNING, "new message from static, but buffer is null.\n");
@@ -199,7 +199,7 @@ struct Messages* NewMessageStatic(uint8_t* buf, uint16_t inMaxLength)
 		return NULL;
 	}
 
-	msg = (struct Messages*)buf;
+	msg = (struct Messages * )buf;
 	memset(msg, 0, sizeof(struct Messages));
 
 	msg->sbuf_use = 1;
@@ -1572,7 +1572,9 @@ int CoapHexInput(const char* data)
 int CoapHexInputStatic(const char* data, uint8_t* inBuf, uint16_t inMaxLength)
 {
 	int ret;
-	struct Messages* msg;
+    int ret_copy;
+    
+	__attribute__((aligned(4))) struct Messages* msg;
 
 	ret = a2b_hex(data, (char*)inBuf, inMaxLength);
 	if (ret < 0) {
@@ -1581,7 +1583,11 @@ int CoapHexInputStatic(const char* data, uint8_t* inBuf, uint16_t inMaxLength)
 	}
 	Logging(LOG_TRACE, "coap hex input %d, to binary %d.\r\n", strlen(data), ret);
 
-	msg = NewMessageStatic(inBuf + ret, inMaxLength - ret);
+    //make ret_copy aligned(4) to message
+    ret_copy = ret;
+    if(ret_copy % 4 != 0) ret_copy += (4 - ret_copy % 4);
+
+	msg = NewMessageStatic(inBuf + ret_copy, inMaxLength - ret_copy);
 	ret = CoapInput(msg, inBuf, ret);
 	if (ret < 0) {
 		Logging(LOG_WARNING, "coap input process failed.\n");

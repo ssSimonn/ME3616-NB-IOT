@@ -50,10 +50,13 @@ struct TLV {
 };
 
 /*
-* Messages，当下最多允许有 16个 TLV
+* Messages，当下最多允许有 10个 TLV
 */
-#define MESSAGE_MAX_TLV 16
+#define MESSAGE_MAX_TLV 5
 struct Messages {
+    
+    /* 静态内存分配区，在 MessageMalloc函数中，实现了一个简单的静态内存分配机制，即只分配，不释放。 */
+	uint8_t * sbuf;
 	// dtag_mid，在上行数据中使用 dtag 语义，用于在一个较短的时间内，去除重复上行的数据
 	// 在下行指令中，取其mid语义，上行的指令响应必须使用同样的mid值，用以关联指令的执行结果。
 	uint16_t dtag_mid;
@@ -65,9 +68,9 @@ struct Messages {
 	// 当前Message对象中的TLV个数总和
 	uint8_t tlv_count;
 
-	/* 静态内存分配区，在 MessageMalloc函数中，实现了一个简单的静态内存分配机制，即只分配，不释放。 */
-	// 内存buffer起始地址，一旦赋值，将不再变动，具体内存使用，由 sbuf_offset 值确定
-	uint8_t* sbuf;
+	
+    
+    // 内存buffer起始地址，一旦赋值，将不再变动，具体内存使用，由 sbuf_offset 值确定
 	uint16_t sbuf_offset;
 	// 原始 sbuf 的最大长度
 	uint16_t sbuf_maxlength;

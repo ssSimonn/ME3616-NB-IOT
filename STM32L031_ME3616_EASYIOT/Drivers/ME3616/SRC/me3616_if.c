@@ -44,7 +44,7 @@ void ME3616_IF_ErrorHandler(char *file, int line, char * pch)
 {
 	UNUSED(file);
 	UNUSED(line);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_AT);
+	DBG_Print(pch,  DBG_DIR_AT);
 	Set_Sys_State(&ME3616_Instance, SYS_STATE_ERR);
 	//Halt and do nothing for this Demo.
 	while(1);
@@ -170,7 +170,7 @@ bool UART_AT_Send(Me3616_DeviceType * Me3616)
 	//Tx string, out of TxBuffer
 	if(ME3616_TX_BUFFER_SIZE -1 < len) ME3616_IF_ErrorHandler(__FILE__, __LINE__, "UART Send out of buffer.");
 
-    DBG_Print(Me3616->TxBuffer, DBG_DIR_TX);
+    DBG_Print((char *)(Me3616->TxBuffer), DBG_DIR_TX);
     
 	//Wait until transmit is idle
 	while(Me3616->UartDMA_Tx->State != HAL_DMA_STATE_READY);
@@ -225,7 +225,7 @@ void DBG_Forward(Me3616_DeviceType * Me3616)
 
 	len = strlen((char *)Me3616->DBG_RxBuffer);
     
-    DBG_Print(Me3616->DBG_RxBuffer, DBG_DIR_TX);
+    DBG_Print((char *)(Me3616->DBG_RxBuffer), DBG_DIR_TX);
     
 	//Wait until transmit is idle
 	while(Me3616->UartDMA_Tx->State != HAL_DMA_STATE_READY);

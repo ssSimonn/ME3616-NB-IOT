@@ -332,7 +332,7 @@ extern DMA_HandleTypeDef hdma_usart2_tx;
   * @param  direction: Indicate string source: Tx, Rx, MCU_AT, APP.
   * @retval None.
   */
-void DBG_Print(uint8_t * ch, DBG_DIR_t direction)
+void DBG_Print(const char * ch, DBG_DIR_t direction)
 {
     int16_t len = 0;
 	uint32_t data = HAL_GetTick();
@@ -376,7 +376,7 @@ void DBG_Print(uint8_t * ch, DBG_DIR_t direction)
     while(__HAL_UART_GET_FLAG(&DBG_UART, UART_FLAG_TC) == 0);
 }
 
-static void State_Hex2Str(char *sDest, uint32_t uSrc)
+void State_Hex2Str(char *sDest, uint32_t uSrc)
 {
 	sprintf(sDest, "%x", uSrc);
 }
@@ -390,7 +390,7 @@ static void State_Hex2Str(char *sDest, uint32_t uSrc)
 {
 	UNUSED(file);
 	UNUSED(line);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_AT);
+	DBG_Print(pch,  DBG_DIR_AT);
 	Set_Sys_State(&ME3616_Instance, SYS_STATE_ERR);
 	//Halt and do nothing for this Demo.	
 	while(1);
@@ -760,7 +760,7 @@ bool ME3616_Init(Me3616_DeviceType * Me3616, UART_HandleTypeDef * AT_huart, DMA_
     uint32_t start_time = 0;
 
 	__set_PRIMASK(1);
-		
+	
 	Set_Sys_State(Me3616, SYS_STATE_POWERON);
 
 	
@@ -793,9 +793,9 @@ bool ME3616_Init(Me3616_DeviceType * Me3616, UART_HandleTypeDef * AT_huart, DMA_
 	
 	
 
-	ME3616_PowerOn(Me3616, 500);
+	ME3616_PowerOn(Me3616, 1000);
     HAL_Delay(1000);
-	ME3616_Reset(Me3616, 500);
+	ME3616_Reset(Me3616, 1000);
 
 
 
@@ -881,23 +881,23 @@ __weak void AT_ResultReport(Me3616_DeviceType * Me3616, bool result)
 {
     if(result == true)
     {
-        DBG_Print("OK",  DBG_DIR_RX);
+        DBG_Print("OK", DBG_DIR_RX);
     }
     else
     {
-        DBG_Print("ERROR",  DBG_DIR_RX);
+        DBG_Print("ERROR", DBG_DIR_RX);
     }
 }
 __weak void Command_Response(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void MATREADY_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	char str_state[12] = {0};
 			
 	DBG_Print("MATREADY Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 
 	if(strstr(pch, "1") != NULL)
 	{
@@ -909,12 +909,12 @@ __weak void MATREADY_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t l
 	}
 	DBG_Print("Sys_State Changed. New state is:", DBG_DIR_AT);
 	State_Hex2Str(str_state, Me3616->Sys_State);
-	DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+	DBG_Print(str_state, DBG_DIR_AT);
 }
 __weak void CME_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("CME Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 
 }
 __weak void CFUN_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
@@ -922,7 +922,7 @@ __weak void CFUN_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 	char str_state[12] = {0};
 		
 	DBG_Print("CFUN Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 
 	if(strstr(pch, "1") != NULL)
 	{
@@ -934,14 +934,14 @@ __weak void CFUN_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 	}
 	DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
 	State_Hex2Str(str_state, Me3616->Sys_State);
-	DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+	DBG_Print(str_state, DBG_DIR_AT);
 }
 __weak void CPIN_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	char str_state[12] = {0};
 	
 	DBG_Print("CPIN Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 	
 	if(strstr(pch, "READY") != NULL)
 	{
@@ -952,16 +952,16 @@ __weak void CPIN_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 		//CPIN not in Ready state, check Manual.
 		Clear_Sys_State(Me3616, SYS_STATE_CPIN);
 	}
-	DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
+	DBG_Print("Sys_State Changed. New state is:", DBG_DIR_AT);
 	State_Hex2Str(str_state, Me3616->Sys_State);
-	DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+	DBG_Print(str_state, DBG_DIR_AT);
 }
 __weak void IP_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {	
 	char str_state[12] = {0};
 	
 	DBG_Print("IP Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 	
 	if(strstr(pch + 5, ".") != NULL)
 	{
@@ -985,38 +985,38 @@ __weak void IP_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 	}
 	DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
 	State_Hex2Str(str_state, Me3616->Sys_State);
-	DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+	DBG_Print(str_state, DBG_DIR_AT);
 }
 __weak void ESONMI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("ESONMI Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void ESODATA_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("ESODATA Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void EMQDISCON_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("EMQDISCON Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void EMQPUB_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("EMQPUB Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void ECOAPNMI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("ECOAPNMI Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void M2MCLI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	char str_state[12] = {0};
 	DBG_Print("M2MCLI Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 
 
 	if(strstr(pch, "deregister success") != NULL)
@@ -1026,7 +1026,7 @@ __weak void M2MCLI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len
 		
 		DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
 		State_Hex2Str(str_state, Me3616->Sys_State);
-		DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+		DBG_Print(str_state,  DBG_DIR_AT);
 			
 	}
 	else if(strstr(pch, "register success") != NULL)
@@ -1035,7 +1035,7 @@ __weak void M2MCLI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len
 		
 		DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
 		State_Hex2Str(str_state, Me3616->Sys_State);
-		DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);	
+		DBG_Print(str_state,  DBG_DIR_AT);	
 	}
 	else if(strstr(pch, "observe success") != NULL)
 	{
@@ -1043,7 +1043,7 @@ __weak void M2MCLI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len
 		
 		DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
 		State_Hex2Str(str_state, Me3616->Sys_State);
-		DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+		DBG_Print(str_state,  DBG_DIR_AT);
 	}
 	else if (strstr(pch, "notify success") != NULL)
 	{
@@ -1051,57 +1051,57 @@ __weak void M2MCLI_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len
 				
 		DBG_Print("Sys_State Changed. New state is:",  DBG_DIR_AT);
 		State_Hex2Str(str_state, Me3616->Sys_State);
-		DBG_Print((uint8_t *)str_state,  DBG_DIR_AT);
+		DBG_Print(str_state,  DBG_DIR_AT);
 	}
 }
 __weak void M2MCLIRECV_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("M2MCLIRECV Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void IPERF_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("IPERF Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void ZGPSR_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("ZGPSR Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void MIPLEVENT_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("MIPLEVENT Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void MIPLREAD_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("MIPLREAD Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void MIPLWRITE_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("MIPLWRITE Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void MIPLOBSERVE_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("MIPLOBSERVE Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch,  DBG_DIR_RX);
 }
 __weak void MIPLDISCOVER_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("MIPLDISCOVER Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void MIPLPARAMETER_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
 	DBG_Print("MIPLPARAMETER Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 __weak void UnknowActiveReport_Callback(Me3616_DeviceType * Me3616, char * pch, uint16_t len)
 {
     DBG_Print("UnknowActiveReport Below:",  DBG_DIR_AT);
-	DBG_Print((uint8_t *)pch,  DBG_DIR_RX);
+	DBG_Print(pch, DBG_DIR_RX);
 }
 

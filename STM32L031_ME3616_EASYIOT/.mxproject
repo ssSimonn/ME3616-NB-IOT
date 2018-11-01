@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/Simon/Desktop/STM32L031_EM3616_NB/STM32L031_EM3616_NB/Inc
+HeaderPath=C:/LocalGitHub/ME3616-NB-IOT/STM32L031_ME3616_EASYIOT/Inc
 HeaderFiles=gpio.h;dma.h;usart.h;rtc.h;stm32l0xx_it.h;stm32l0xx_hal_conf.h;main.h;
-SourcePath=C:/Users/Simon/Desktop/STM32L031_EM3616_NB/STM32L031_EM3616_NB/Src
+SourcePath=C:/LocalGitHub/ME3616-NB-IOT/STM32L031_ME3616_EASYIOT/Src
 SourceFiles=gpio.c;dma.c;usart.c;rtc.c;stm32l0xx_it.c;stm32l0xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
