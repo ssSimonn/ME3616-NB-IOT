@@ -47,8 +47,8 @@
 #define EASYIOT_CONVERT_AT_BUFF_MAX_SIZE	200
 
 
-char * client_imei = "869662030705583";
-char * client_imsi = "460113009503228";
+char * client_imei = "86966203070xxxx";
+char * client_imsi = "46011300950xxxx";
 
 
 int32_t Signal_val = 0;		//пе╨ег©╤х
