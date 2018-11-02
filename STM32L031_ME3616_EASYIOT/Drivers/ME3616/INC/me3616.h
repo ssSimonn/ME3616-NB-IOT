@@ -469,9 +469,10 @@ void ME3616_APP(Me3616_DeviceType * Me3616);
 #ifdef DEBUG_ME3616
 
 typedef enum {
-		DBG_DIR_RX = 0,
-		DBG_DIR_TX,
-		DBG_DIR_AT,
+    DBG_DIR_RX = 0,
+    DBG_DIR_TX,
+    DBG_DIR_AT,
+    DBG_DIR_SDK,
     DBG_DIR_APP
 }DBG_DIR_t;	
 	

@@ -360,7 +360,12 @@ void DBG_Print(const char * ch, DBG_DIR_t direction)
 			len = sprintf((char *)ME3616_Instance.DBG_TxBuffer, "[%d][MCU_AT]: %s\r\n", data, ch );
 			break;
 		}
-
+        
+        case DBG_DIR_SDK:
+		{
+			len = sprintf((char *)ME3616_Instance.DBG_TxBuffer, "[%d][EasyIoT]: %s\r\n", data, ch );
+			break;
+		}
 		default:
 		{
 			len = sprintf((char *)ME3616_Instance.DBG_TxBuffer, "[%d][APP]: %s\r\n", data, ch );
@@ -823,9 +828,8 @@ bool ME3616_Init(Me3616_DeviceType * Me3616, UART_HandleTypeDef * AT_huart, DMA_
 			//Timeout without IPv4 and IPv6 address.
 			return false;
 		}
+    HAL_Delay(2000);        
     }
-
-
 }
 
 void Hex2Str(char *sDest, const char *sSrc, int nSrcLen )  

@@ -315,7 +315,7 @@ void SendtoModule(const uint8_t* data, uint16_t inLength)
 //easy iot SDK生成的debug，发送至模块
 void SendtoDBG(const unsigned char * data, uint16_t inLength)
 {
-	DBG_Print((char *)data, DBG_DIR_APP);	
+	DBG_Print((char *)data, DBG_DIR_SDK);	
 }
 
 
@@ -439,9 +439,9 @@ void me3616_test_easyiot(Me3616_DeviceType * Me3616)
 	FreeMessage(msg);
 
         
-    
+    DBG_Print("MSG send performed, Check Data on IoT Platform.", DBG_DIR_APP);
 	HAL_Delay(3000);
-	
+	DBG_Print("Waiting CMD from IoT Platform.", DBG_DIR_APP);
     
     
     /*   等待接收从平台下发的命令  */
